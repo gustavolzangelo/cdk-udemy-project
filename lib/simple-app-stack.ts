@@ -1,5 +1,6 @@
 import { Bucket, BucketEncryption } from '@aws-cdk/aws-s3';
-import * as lambda from '@aws-cdk/aws-lambda-nodejs';
+import * as lambdaTS from '@aws-cdk/aws-lambda-nodejs';
+import * as lambda from '@aws-cdk/aws-lambda';
 import * as cdk from '@aws-cdk/core';
 import { Runtime } from '@aws-cdk/aws-lambda';
 import * as path from 'path';
@@ -12,14 +13,14 @@ export class SimpleAppStack extends cdk.Stack {
       encryption: BucketEncryption.S3_MANAGED      
     });
     
-    // const getPhotos= new lambda.Function(this, 'MySimpleAppLambda', {
+    // new lambda.Function(this, 'MySimpleAppLambda', {
     //   runtime: lambda.Runtime.NODEJS_12_X,
     //   code: lambda.Code.fromAsset('api/get-photos'),
     //   handler: 'index.handler',
     // });    
 
-    const getPhotos = new lambda.NodejsFunction(this, 'MySimpleAppLambda', {
-      runtime: Runtime.NODEJS_12_X,
+      new lambdaTS.NodejsFunction(this, 'MySimpleAppLambda', {
+      runtime: lambda.Runtime.NODEJS_12_X,
       entry: path.join(__dirname, '..', 'api', 'get-photos', 'index.ts'),
       handler: 'getPhotos',
     });
