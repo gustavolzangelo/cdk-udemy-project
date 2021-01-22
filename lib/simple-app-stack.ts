@@ -11,19 +11,24 @@ export class SimpleAppStack extends cdk.Stack {
     
     const bucket = new Bucket(this,'MySimpleAppBucket',{
       encryption: BucketEncryption.S3_MANAGED      
-    });
-    
-    // new lambda.Function(this, 'MySimpleAppLambda', {
-    //   runtime: lambda.Runtime.NODEJS_12_X,
-    //   code: lambda.Code.fromAsset('api/get-photos'),
-    //   handler: 'index.handler',
-    // });    
+    });   
 
-      new lambdaTS.NodejsFunction(this, 'MySimpleAppLambda', {
+    const getPhotos = new lambdaTS.NodejsFunction(this, 'MySimpleAppLambdaTS', {
       runtime: lambda.Runtime.NODEJS_12_X,
-      entry: path.join(__dirname, '..', 'api', 'get-photos', 'index.ts'),
+      entry: path.join(__dirname, '..', 'api', 'getPhotos', 'index.ts'),
       handler: 'getPhotos',
+      environment: {
+        PHOTO_BUCKET_NAME: bucket.bucketName,
+      },
     });
+
+    // const getPhotos2 = new lambda.Function(this, 'MySimpleAppLambda', {
+    //   runtime: lambda.Runtime.NODEJS_12_X,
+    //   code: lambda.Code.fromAsset(
+    //     path.join(__dirname, '..', 'api', 'getPhotos')
+    //   ),
+    //   handler: 'index.getPhotos',
+    // });
 
     new cdk.CfnOutput(this, 'MySimpleBucketNameExport', {
       value: bucket.bucketName,
